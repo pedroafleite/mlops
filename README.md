@@ -78,7 +78,7 @@ Instale as dependências:
 
 Permita que sua conta instale apitools e certifique-se que a APÌ do Dataflow está ativa.
 
-Com [pubsub_gcs.py](https://github.com/pedroafleite/mlops_exercise/blob/main/.gitignore), iremos executar o seguinte job no Dataflow:
+Com [pubsub_gcs.py](https://github.com/pedroafleite/mlops_exercise/blob/main/pubsub_gcs.py), iremos executar o seguinte job no Dataflow:
 
 `python pubsub_gcs.py --project=mlops-1635587444840 --region=us-central1 --input_topic=projects/mlops-1635587444840/topics/topic-brigade --output_path=gs://ml_input/samples/output --runner=DataflowRunner --window_size=2 --num_shards=1 --temp_location=gs://ml_input/temp`
 
