@@ -7,35 +7,39 @@ conda create -n "venv" python=3.8.0 ipython
 conda env list
 conda activate venv
 
-==PUBSUB==
+==CONFIGURATION==
 gcloud auth login
 
-export PROJECT_ID=project_id
-gcloud projects create ${PROJECT_ID}
+gcloud projects create mlops-1635587444840
 
 export SERVICE_ACCOUNT=service_account
-gcloud iam service-accounts create ${SERVICE_ACCOUNT} --description="service account for mlops exercise" --display-name="service-mlops"
-gcloud projects add-iam-policy-binding ${PROJECT_ID} --member="serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com" --role="roles/pubsub.admin"
+gcloud iam service-accounts create service-mlops-1382162467 --description="service account for mlops exercise" --display-name="service-mlops"
+gcloud projects add-iam-policy-binding mlops-1635587444840 --member="serviceAccount:service-mlops-1382162467@mlops-1635587444840.iam.gserviceaccount.com" --role="roles/pubsub.admin"
 gcloud iam service-accounts list
-gcloud iam service-accounts keys create key-file.json --iam-account=${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
+gcloud iam service-accounts keys create mlops-485cf5c206db.json --iam-account=service-mlops-1382162467@$mlops-1635587444840.iam.gserviceaccount.com
 
-==PubSub to Storage using Dataflow==
+==Storage==
 
-gcloud compute regions list
 gsutil mb gs://ml_input
-
 gcloud projects add-iam-policy-binding mlops-1635587444840 --member="serviceAccount:service-mlops-1382162467@mlops-1635587444840.iam.gserviceaccount.com" --role="roles/storage.admin"
+
+==PubSub==
+
+pip install --upgrade google-cloud-pubsub
+gcloud pubsub topics create topic-brigade
+gcloud pubsub subscriptions create sub-brigade --topic topic-brigade
+
+==Dataflow==
+
 pip install apache_beam[gcp]
 # allow your account to use apitools
+# Certifique-se que a API do Dataflow está ativa
 python pubsub_gcs.py --project=mlops-1635587444840 --region=us-central1 --input_topic=projects/mlops-1635587444840/topics/topic-brigade --output_path=gs://ml_input/samples/output --runner=DataflowRunner --window_size=2 --num_shards=1 --temp_location=gs://ml_input/temp
 python publisher.py
 python subscriber.py
 
 ==DATAPROC==
 
-export CLUSTER=cluster-name
+gcloud dataproc clusters create brigade-cluster --project=mlops-1635587444840 --region=us-central1 --single-node
 
-gcloud dataproc clusters create ${CLUSTER} \
-    --project=${PROJECT} \
-    --region=${REGION} \
-    --single-node
+gcloud dataproc jobs submit pyspark word-count.py --cluster=brigade-cluster --region=us-central1 -- gs://ml_input/input/ gs://${BUCKET_NAME}/output/
