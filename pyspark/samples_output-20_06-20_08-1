@@ -1,0 +1,21 @@
+{
+"eventTimestamp": "2019-04-02T21:55:57Z",
+"eventId": "3dc6eb9af4154635b688e7cfeb8db131bfe84ccd",
+"eventSource": "doc.contract",
+"eventVersion": "1.0",
+"eventType": "DocSchedule",
+"doc": {
+"schemaVersion": "1.0",
+"docId": "CF2909E5-12C8-4D42-A996-12672B727B3B",
+"metadata": {
+"accountId": "EA2425CF-EF72-40C6-8DD3-C7D5310FA07D",
+"superTag01": "A",
+"superTag02": "C",
+"otherTags": [
+{"tagName": "otherTag01", "tagValue": "A"},
+{"tagName": "otherTag02", "tagValue": "X"}
+]
+},
+"payload": "texto teste"
+}
+},2021-10-30 20:07:35.153000
