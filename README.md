@@ -82,7 +82,7 @@ Instale as dependências:
 
 `pip install apache_beam[gcp]`
 
-Permita que sua conta instale apitools e certifique-se que a APÌ do Dataflow está ativa.
+Permita que sua conta instale apitools e certifique-se que a API do Dataflow está ativa.
 
 Com [pubsub_gcs.py](https://github.com/pedroafleite/mlops_exercise/blob/main/pubsub_gcs.py), iremos executar o Dataflow:
 

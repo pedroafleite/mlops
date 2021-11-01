@@ -6,7 +6,7 @@ def json_into_parquet():
     spark = SparkSession.builder.getOrCreate()
 
     with open('samples_output-20_06-20_08-1') as f:
-        lines = f.readlines()
+        lines = f.readlines()        
     lines = lines[:-1]
     lines.append("}")
 
@@ -19,18 +19,14 @@ def json_into_parquet():
         print(data)
 
     list_tags = data['doc']['metadata']['otherTags']
-
-    d = []
-
+    d = [] # lista para iterar elementos de otherTags
     for i in range(len(list_tags)):
         a = data['doc']['metadata']['otherTags'][i]['tagName']
         b = data['doc']['metadata']['otherTags'][i]['tagValue']
         c = a + ':' + b
-        d.append(c)
-
-    other_tags = '|'.join(d)
-    print(other_tags)
-
+        d.append(c)        
+    other_tags = '|'.join(d) # concatenar strings de otherTags
+    
     pandas_df = pd.DataFrame({
         'eventTimestamp': [data['eventTimestamp']],
         'eventSource': [data['eventSource']],
@@ -43,6 +39,5 @@ def json_into_parquet():
         'payload': [data['doc']['payload']]
     })
     df = spark.createDataFrame(pandas_df)
-    df.show()
-
     df.write.parquet("output/proto.parquet")
+    
