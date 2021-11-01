@@ -5,19 +5,17 @@ Consideramos aqui um problema de MLOPs na Google Cloud Platform, em que um algor
 Segue abaixo o desenho completo da solução:
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/68903879/139598908-fe0bba9c-7d6a-4824-8a8e-60596d8ae364.png">
+  <img src="https://user-images.githubusercontent.com/68903879/139656157-2b82deb9-2cac-4e02-a5c1-1459c06b286b.png">
 </p>
 
 ## Treinamento do algoritmo de ML
 
 Começaremos pelo lado esquerdo da figura acima, justificando as etapas de treinamento do algoritmo de Machine Learning.
 
-Consideraremos a primeira ferramenta do Data Pipeline como o **Cloud Pub/Sub**, um serviço de mensageria que iria receber o JSON de entrada de uma API. Depois, iremos guardar este JSON de entrada em um bucket do **Storage**. Ao salvarmos as mensagens do Pub/Sub no Storage, teremos arquivos resilientes que serão acumulados até o próximo treinamento do modelo, e além. 
+A primeira etapa do Data Pipeline passa pelo **Cloud Pub/Sub**, um serviço de mensageria que irá receber o JSON de entrada de uma API. Depois, iremos guardar este JSON de entrada em um bucket do **Storage**. Ao salvarmos as mensagens do Pub/Sub no Storage, teremos arquivos resilientes que serão acumulados até o próximo treinamento do modelo, e além. Finalmente, para salvar a mensagem como um arquivo no Storage, precisamos do **Dataflow**, um serviço de gerenciamento de pipelines baseado no Apache Beam.
 
-Para salvar o arquivo de um lugar para outro, precisamos do **Dataflow**, um serviço de gerenciamento de pipelines baseado no Apache Beam. 
-
-Para orquestrarmos todo esse processo para ser executado automaticamente a cada 4 semanas, criaremos um cron job utilizando o **Cloud Scheduler**. Tecnicamente, este seria o primeiro passo a ser executado no Data Pipeline, já que coordena o disparo de todos os próximos passos. No entanto, é uma etapa que exige que o resto do fluxo já esteja pronto para execução.
+Para executarmos o algoritmo de treinamento do modelo de ML (`train_ml_model.py`), contaremos com o **Dataproc**. A partir do Dataproc, utilizaremos o SparkSQL para manipularmos o JSON de entrada para um .parquet — a extensão exigida para o treinamento do modelo. Estas etapas serão coordenadas por uma *managed cluster*, que é criada e encerrada durante um workflow job, gerada a partir de um Dataproc Workflow Template. O workflow job consistirá em uma DAG (*Directed Acyclic Graph*) que orquestrará todo os processos do Dataproc. Esta DAG será executada a cada 4 semanas e será disparada através de um cron especificado no **Cloud Scheduler**. Uma vez que este Scheduler estiver ativo, nosso Data Pipeline estará pronto.
 
 ## Classificação em tempo real
 
-O Pub/Sub invoca o **Cloud Functions** de forma assíncrona e recebe um JSON de saída já classificado pelo modelo de ML mais recente disponível.
+Para disponibilizarmos o modelo para classificação em tempo real, criaremos utilizaremos uma arquitetura serverless utilizando o **Cloud Functions**. Nesta arquitetura simples, o Pub/Sub invoca a função de forma assíncrona e recebe um JSON de saída já classificado pelo modelo de ML mais recente disponível. Para permitir que esta API esteja altamente disponível independentemente do número de requisições, podemos aumentar o número de instâncias desta função disponíveis pelo auto-scaling do Cloud Functions. Desta forma, nossa aplicação será escalável na medida necessária e nossos custos serão correlacionados diretamente pelas requisições feitas no aplicativo.
