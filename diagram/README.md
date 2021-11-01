@@ -5,7 +5,7 @@ Consideramos aqui um problema de MLOPs na Google Cloud Platform, em que um algor
 Segue abaixo o desenho completo da solução:
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/68903879/139668175-cb03692e-1c39-4442-ac47-68c28dcbc33b.png">
+  <img src="https://user-images.githubusercontent.com/68903879/139669005-4e311982-3990-4e9c-95b4-d188d62f8052.png">
 </p>
 
 ## Treinamento do algoritmo de ML
