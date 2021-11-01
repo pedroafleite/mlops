@@ -17,3 +17,7 @@ Consideraremos a primeira ferramenta do Data Pipeline como o **Cloud Pub/Sub**, 
 Para salvar o arquivo de um lugar para outro, precisamos do **Dataflow**, um serviço de gerenciamento de pipelines baseado no Apache Beam. 
 
 Para orquestrarmos todo esse processo para ser executado automaticamente a cada 4 semanas, criaremos um cron job utilizando o **Cloud Scheduler**. Tecnicamente, este seria o primeiro passo a ser executado no Data Pipeline, já que coordena o disparo de todos os próximos passos. No entanto, é uma etapa que exige que o resto do fluxo já esteja pronto para execução.
+
+## Classificação em tempo real
+
+O Pub/Sub invoca o **Cloud Functions** de forma assíncrona e recebe um JSON de saída já classificado pelo modelo de ML mais recente disponível.
