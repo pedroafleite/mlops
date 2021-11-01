@@ -1,6 +1,6 @@
 import pandas as pd
-from pyspark.sql import SparkSession
 import json
+from pyspark.sql import SparkSession
 
 def json_into_parquet():
     spark = SparkSession.builder.getOrCreate()
