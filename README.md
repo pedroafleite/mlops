@@ -1,7 +1,7 @@
 # MLOps no GCP: Tutorial passo-a-passo
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/68903879/139598908-fe0bba9c-7d6a-4824-8a8e-60596d8ae364.png">
+  <img src="https://user-images.githubusercontent.com/68903879/139656157-2b82deb9-2cac-4e02-a5c1-1459c06b286b.png">
 </p>
 
 Para uma breve explicação da solução, [clique aqui](https://github.com/pedroafleite/mlops_exercise/tree/main/diagram).
