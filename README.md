@@ -60,13 +60,15 @@ Em um teste como o nosso, podemos escolher uma role bastante abrangente (no caso
 
 Este json deve estar propriamente escondido atrás do [.gitignore](https://github.com/pedroafleite/mlops_exercise/blob/main/.gitignore), já que estamos compartilhando este repositório no Github.
 
-## Preparando o Storage
+## Treinamento do algoritmo de ML
+
+### Preparando o Storage
 
 Vamos criar um novo bucket no Storage com o nome **ml_input**:
 
 `gsutil mb gs://ml_input`
 
-## Configurando o PubSub
+### Configurando o PubSub
 
 Dentro da venv, instale as dependências do PubSub para acessá-lo no Python:
 
@@ -80,7 +82,9 @@ E uma subscrição à este tópico chamada **sub-brigade**:
 
 `gcloud pubsub subscriptions create sub-brigade --topic topic-brigade`
 
-## Configurando o Dataflow
+A subscrição não é necessária para o fluxo do pipeline, mas pode ser utilizada para debuggar o fluxo de dados até esta etapa.
+
+### Configurando o Dataflow
 
 Instale as dependências:
 
@@ -94,7 +98,7 @@ Com [pubsub_gcs.py](https://github.com/pedroafleite/mlops_exercise/blob/main/pub
 
 As configurações de windows size e número de shards podem ser modificadas para melhor performance. Para estes valores autoescalarem, remova estas variáveis da linha de comando. Para uma boa ilustração prática de windowning (que nada mais é do que uma janela deslizante que analisa dados vizinhos em microbatches, um por um), veja [este tutorial](https://cloud.google.com/architecture/using-apache-spark-dstreams-with-dataproc-and-pubsub). Já sharding significa que os dados serão particionados e processados paralelamente pelo Spark. Um número de shards igual a 1 significa que este processamento paralelo não ocorrerá.
 
-## Configurando o Dataproc
+### Criando uma nova cluster submetendo um job no Dataproc
 
 Inicializaremos uma nova cluster chamada **brigade-cluster**:
 
@@ -105,5 +109,13 @@ Submetemos o job do Pyspark que irá executar o `train_ml_model.py`.
 `gcloud dataproc jobs submit pyspark train_ml_model.py --cluster=brigade-cluster --region=us-central1 -- gs://ml_input/input/ gs://ml_output/output/`
 
 Designamos os diretórios do Storage de input e output, mas dentro do script, ainda determinamos um subdiretório para salvar os modelos. Os subdiretórios serão dinamicamente nomeados com a data em que ocorreu o treinamento, no formato doc-classification-model-YYYY-MM-DD. Além disso, ao executar `train_ml_model`, executamos também a dependência `spark_sql.py`, importada no arquivo anterior, que faz a transformação do arquivo json recebido no input do PubSub para um .parquet. que será lido pelo modelo de ML.
+
+### Executando a pipeline de treinamento
+
+...
+
+## Classificação em tempo real
+
+...
 
 [Em construção...]
