@@ -4,7 +4,7 @@
   <img src="https://user-images.githubusercontent.com/68903879/139669005-4e311982-3990-4e9c-95b4-d188d62f8052.png">
 </p>
 
-Para uma breve explicação da solução, [clique aqui](https://github.com/pedroafleite/mlops_exercise/tree/main/diagram).
+Para uma explicação detalhada da solução, [clique aqui](https://github.com/pedroafleite/mlops_exercise/tree/main/diagram).
 
 ## Pré-requisitos:
 - Anaconda instalado.
@@ -112,7 +112,7 @@ Submetemos o job do Pyspark que irá executar o `train_ml_model.py`.
 
 Designamos os diretórios do Storage de input e output, mas dentro do script, ainda determinamos um subdiretório para salvar os modelos. Os subdiretórios serão dinamicamente nomeados com a data em que ocorreu o treinamento, no formato doc-classification-model-YYYY-MM-DD. Além disso, ao executar `train_ml_model`, executamos também a dependência `spark_sql.py`, importada no arquivo anterior, que faz a transformação do arquivo json recebido no input do PubSub para um .parquet. que será lido pelo modelo de ML.
 
-### Worlflow usando o Cloud Scheduler
+### Dataproc Workflow Template utilizando o Cloud Scheduler
 
 Vamos usar o Cloud Scheduler para orquestrar os jobs do Dataproc, para executarmos um treinamento a cada 4 semanas. Para isso, criaremos um Dataproc Workflow Template, que centraliza a configuração da orquestração e possui um Scheduler acoplado.
 
@@ -122,19 +122,25 @@ Vamos usar o Cloud Scheduler para orquestrar os jobs do Dataproc, para executarm
 
 `gcloud dataproc workflow-templates set-managed-cluster sparkpi --cluster-name=sparkpi --single-node --region=us-central1`
 
-Na página do [Cloud Scheduler](https://console.cloud.google.com/cloudscheduler), podemos definir o nome do job schedule e a região (aqui sendo us-central1). No campo frequência, definiremos um cron. Um cron permite apenas que especifiquemos minuto (0-59), hora (0-23), dia do mês (1-31), mês do ano (1-12) e dia da semana (0-6 em que 0=domingo). Desta forma, para especificar um job schedule a cada 4 semanas — toda segunda-feira, por exemplo — escrevemos:
+Na página do [Cloud Scheduler](https://console.cloud.google.com/cloudscheduler), podemos definir o nome do job schedule (aqui `brigade-schedule`) e a região (aqui sendo `us-central1`). No campo frequência, definiremos um cron. Um cron permite apenas que especifiquemos minuto (0-59), hora (0-23), dia do mês (1-31), mês do ano (1-12) e dia da semana (0-6 em que 0=domingo). Desta forma, para especificar um job schedule a cada 4 semanas — toda segunda-feira, por exemplo — escrevemos:
 
 `0 2 * * 1/4`
 
 Escolhemos também o fuso horário de referência, um target ("HTTP"), a URL do Dataproc Workflow Template (que seria `https://dataproc.googleapis.com/v1/projects/mlops-1635587444840/regions/us-central1/workflowTemplates/sparkpi:instantiate?alt=json`) e o método HTTP (no caso, um `POST` com `Body: "{}"`)
 
-
 ### Executando a pipeline de treinamento
 
-A partir daqui, basta executarmos o arquivo `publisher.py`, que simula o envio de um JSON para o tópico do PubSub, e teremos o kickstart do nosso Pipeline.
+Para executarmos o workflow, vamos para a página inicial do CloudScheduler. Aqui, selecionamos o job que acabamos de criar e clicamos em RUN NOW. 
+
+A partir daqui, basta executarmos o arquivo `publisher.py`, que simula o envio de um JSON para o tópico do PubSub, e teremos o kickstart do nosso Pipeline. O JSON será enviado pelo PubSub e será armazenado no Storage. No entanto, o workflow job que treina o modelo será executado apenas na data especificada do cron (no caso, a cada 4 semanas, na segunda-feira).
+
+Podemos mockar um teste manipulando o cron para treinar o modelo na hora que quisermos testar. Também podemos enviar um stream de dados ao coordenarmos um segundo CloudScheduler para enviar arquivos JSON a cada dez minutos para o nosso PubSub, por exemplo.
 
 ## Classificação em tempo real
 
-...
+Para classificarmos nossos dados em 
+
+
+
 
 [Em construção...]
