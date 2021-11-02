@@ -138,11 +138,7 @@ Podemos mockar um teste manipulando o cron para treinar o modelo na hora que qui
 
 ## Classificação em tempo real
 
-Para classificarmos nossos dados em tempo real, basta disponibilizarmos o modelo pré-treinado para uma Cloud Function, que poderá ser acessada como uma REST API, ou serverless endpoint.
-
-
-
-
+Para classificarmos nossos dados em tempo real, basta disponibilizarmos o modelo pré-treinado para uma Cloud Function, que poderá ser acessada como uma REST API, ou serverless endpoint. Para criar uma função, basta ir até a página do [Cloud Function](https://console.cloud.google.com/functions) e colocar os arquivos contidos em ...
 
 
 
