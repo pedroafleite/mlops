@@ -1,6 +1,6 @@
 # Solução de problema de MLOps na GCP
 
-Consideramos aqui um problema de MLOPs na Google Cloud Platform, em que um algoritmo de Machine Learning deve ser treinado a cada 4 semanas, gerando um novo modelo, ao mesmo tempo que é disponibilizado para o usuário uma classificação em tempo real baseada no último modelo gerado. Para solucionar este problema, escolhemos um determinado fluxo de ferramentas da GCP que cumpririam estas tarefas. Neste documento, justificaremos estas escolhas.
+Consideramos aqui um problema de MLOPs na Google Cloud Platform, em que um algoritmo de Machine Learning deve ser treinado a cada 4 semanas, gerando um novo modelo, ao mesmo tempo que é disponibilizado para o usuário uma classificação em tempo real baseada no último modelo gerado. Para solucionar este problema, escolhemos um determinado fluxo de ferramentas da GCP que cumpririam estas tarefas.
 
 Segue abaixo o desenho completo da solução:
 
@@ -9,8 +9,6 @@ Segue abaixo o desenho completo da solução:
 </p>
 
 ## Treinamento do algoritmo de ML
-
-Começaremos pelo lado esquerdo da figura acima, justificando as etapas de treinamento do algoritmo de Machine Learning.
 
 A primeira etapa do Data Pipeline passa pelo **Cloud Pub/Sub**, um serviço de mensageria que irá receber o JSON de entrada de uma API. Depois, iremos guardar este JSON de entrada em um bucket do **Storage**. Ao salvarmos as mensagens do Pub/Sub no Storage, teremos arquivos resilientes que serão acumulados até o próximo treinamento do modelo, e além. Finalmente, para salvar a mensagem como um arquivo no Storage, precisamos do **Dataflow**, um serviço de gerenciamento de pipelines baseado no Apache Beam. Uma opção menos resiliente para guardar nossos dados seria utilizar o Cloud Datastore, que armazenaria nossos JSONs em um banco de dados NoSQL. Ao armazenarmos aqui, poderiamos perder resiliência, mas ganharíamos em performance.
 
