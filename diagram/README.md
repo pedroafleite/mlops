@@ -1,6 +1,6 @@
 # Solução de problema de MLOps na GCP
 
-Consideramos aqui um problema de MLOPs na Google Cloud Platform, em que um algoritmo de Machine Learning deve ser treinado a cada 4 semanas, gerando um novo modelo, ao mesmo tempo que é disponibilizado para o usuário uma classificação em tempo real baseada no último modelo gerado. Para solucionar este problema, escolhemos um determinado fluxo de ferramentas da GCP que cumpririam estas tarefas.
+Consideramos aqui um problema de MLOPs na Google Cloud Platform, em que um algoritmo de Machine Learning deve ser treinado a cada 4 semanas, gerando um novo modelo, ao mesmo tempo em que é disponibilizado para o usuário uma classificação em tempo real baseada no último modelo gerado. Para solucionar este problema, escolhemos um determinado fluxo de ferramentas da GCP que cumpririam estas tarefas.
 
 Segue abaixo o desenho completo da solução:
 
