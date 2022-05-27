@@ -12,7 +12,7 @@ Para uma explicação detalhada da solução, [clique aqui](https://github.com/p
 
 ## Criando um ambiente virtual
 
-Primeiramente, seguiremos boas práticas se criarmos uma virtualenv. Esta virtualenv terá Python 3.8 (downgrade da versão atual 3.9), que será necessária para rodar alguns recursos mais para frentes. Como possuo Anaconda no meu computador, posso facilmente executar estes passos com:
+Primeiramente, seguiremos boas práticas se criarmos uma virtualenv. Esta virtualenv terá Python 3.8 (downgrade da versão atual 3.9), que será necessária para rodar alguns recursos mais para frente. Como possuo Anaconda no meu computador, posso facilmente executar estes passos com:
 
 `conda create -n "venv" python=3.8.0 ipython`
 
